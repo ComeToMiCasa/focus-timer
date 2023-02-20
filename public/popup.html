@@ -1,32 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>My Chrome Extension</title>
-    <link rel="stylesheet" href="popup.css" />
-  </head>
-  <body>
-    <div class="app">
-      <p class="counter-label">Counter</p>
-      <div id="counter" class="counter"></div>
-      <div class="button-container">
-        <button id="decrementBtn" class="button">-</button>
-        <button id="incrementBtn" class="button">+</button>
-      </div>
-
-      <hr class="divider" />
-
-      <p class="title">Chrome Extension is Ready!</p>
-      <p class="subtitle">Start by updating <code>popup.html</code></p>
+<head>
+    <title>PopUp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="popup.css">
+</head>
+<body>
+    <div class="timerContainer">
+        <div class="timer">
+            <div id="focusContainer" >
+                <div id="minutes"></div>
+                <div class="divider">:</div>
+                <div id="seconds"></div>
+            </div>
+            <div id="breakContainer" >
+                
+            </div>
+        </div>
     </div>
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
+    <div class="layer"></div>
 
-    <script src="popup.js"></script>
+</body>
+<script src="popup.js"></script>
 
-    <!--
-      This HTML file opens when you click on icon from the toolbar.
-
-      To begin the development, run `npm run watch`.
-      To create a production bundle, use `npm run build`.
-    -->
-  </body>
 </html>

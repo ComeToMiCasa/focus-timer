@@ -1,21 +1,64 @@
 'use strict';
 
-// With background scripts you can communicate with popup
-// and contentScript files.
-// For more information on background script,
-// See https://developer.chrome.com/extensions/background_pages
+let seconds = 1500;
+
+const tick = () => {
+  console.log("test")
+  setInterval(() => {
+    chrome.tabs.query({}).then((tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, {
+          from: "BACKGROUND",
+          command: "TICK",
+          payload: {
+            seconds
+          }
+        })
+      })
+      seconds--;
+    })
+  }, 1000);
+}
+
+const handleStart = async () => {
+  console.log("start")
+  await chrome.storage.local.set({ isFocus: true })
+
+  chrome.tabs.query({}).then((tabs) => {
+    tabs.forEach((tab, index) => {
+      chrome.tabs.sendMessage(tab.id, {
+        from: "BACKGROUND",
+        command: "START",
+        payload: {
+          isFocus: true 
+        }
+      })
+    })
+  })
+
+  tick()
+}
+
+const handleStop = async () => {
+  chrome.tabs.query({}).then((tabs) => {
+    console.log(tabs)
+    tabs.forEach((tab, index) => {
+      chrome.tabs.sendMessage(tab.id, {
+        from: "BACKGROUND",
+        command: "STOP",
+      })
+    })
+  })
+}
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'GREETINGS') {
-    const message = `Hi ${
-      sender.tab ? 'Con' : 'Pop'
-    }, my name is Bac. I am from Background. It's great to hear from you.`;
-
-    // Log message coming from the `request` parameter
-    console.log(request.payload.message);
-    // Send a response message
-    sendResponse({
-      message,
-    });
+  if(request.command === 'START') {
+    handleStart()
+  } else if (request.command === 'STOP') {
+    handleStop()
   }
-});
+})
+
+chrome.runtime.onConnect.addListener((port) => {
+  console.assert(port.name === "timerPort") 
+})
