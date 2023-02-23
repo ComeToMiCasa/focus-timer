@@ -1,28 +1,14 @@
 'use strict';
 
 let seconds = 1500;
-
-const tick = () => {
-  console.log("test")
-  setInterval(() => {
-    chrome.tabs.query({}).then((tabs) => {
-      tabs.forEach((tab) => {
-        chrome.tabs.sendMessage(tab.id, {
-          from: "BACKGROUND",
-          command: "TICK",
-          payload: {
-            seconds
-          }
-        })
-      })
-      seconds--;
-    })
-  }, 1000);
-}
+import moment from "moment"
 
 const handleStart = async () => {
-  console.log("start")
   await chrome.storage.local.set({ isFocus: true })
+  const now = moment();
+  console.log(now.format())
+  await chrome.storage.sync.set({ startTime: now.format("MM/DD/YYYY HH:mm:ss.SSS") })
+  console.log(now)
 
   chrome.tabs.query({}).then((tabs) => {
     tabs.forEach((tab, index) => {
@@ -30,13 +16,12 @@ const handleStart = async () => {
         from: "BACKGROUND",
         command: "START",
         payload: {
-          isFocus: true 
+          isFocus: true,
+          startTime: now.format("MM/DD/YYYY HH:mm:ss.SSS")
         }
       })
     })
   })
-
-  tick()
 }
 
 const handleStop = async () => {
